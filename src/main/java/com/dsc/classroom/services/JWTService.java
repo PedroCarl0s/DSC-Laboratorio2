@@ -4,6 +4,7 @@ import com.dsc.classroom.dtos.UserLoginDTO;
 
 import com.dsc.classroom.exceptions.InvalidLoginException;
 import com.dsc.classroom.filters.TokenFilter;
+import com.dsc.classroom.models.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,10 +60,12 @@ public class JWTService {
         return Optional.of(subject);
     }
 
-    public String getStudentId(String authorization) {
-        String studentEmail = userIdRecovery(authorization)
+    public User getUserId(String authorization) {
+        String email = userIdRecovery(authorization)
                 .orElseThrow(() -> new SecurityException("The user was not found!"));
 
-        return studentEmail;
+        Optional<User> user = userService.findByEmail(email);
+
+        return user.get();
     }
 }
