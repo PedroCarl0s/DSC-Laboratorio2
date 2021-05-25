@@ -1,10 +1,15 @@
 package com.dsc.classroom.models;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
 
 @Entity
 @Table(name = "users")
@@ -19,7 +24,13 @@ public class User {
 
     @NotNull
     private String password;
-    
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<DisciplineLike> likes;
+
     public User() {
         
     }
@@ -52,6 +63,22 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+    
+    public List<DisciplineLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<DisciplineLike> likes) {
+        this.likes = likes;
     }
 
     @Override

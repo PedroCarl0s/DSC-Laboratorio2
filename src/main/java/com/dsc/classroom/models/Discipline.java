@@ -1,6 +1,5 @@
 package com.dsc.classroom.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -18,10 +17,12 @@ public class Discipline {
     private String name;
 
     private double note;
-    private int likes;
 
     @OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
     List<Comment> comments;
+
+    @OneToMany(mappedBy = "discipline", cascade = CascadeType.ALL)
+    private List<DisciplineLike> likes;
 
     public Discipline() {
     }
@@ -54,14 +55,6 @@ public class Discipline {
         this.note = note;
     }
 
-    public int getLikes() {
-        return likes;
-    }
-
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
     public List<Comment> getComments() {
         return comments;
     }
@@ -70,4 +63,12 @@ public class Discipline {
         this.comments = comments;
     }
 
+    public List<DisciplineLike> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<DisciplineLike> likes) {
+        this.likes = likes;
+    }
+    
 }
