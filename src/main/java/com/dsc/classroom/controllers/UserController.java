@@ -23,12 +23,12 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<UserDTO> addUser(@Valid @RequestBody User user) {
         try {
-            return new ResponseEntity<UserDTO>(this.userService.addUser(user), HttpStatus.CREATED);
+            return new ResponseEntity<>(this.userService.addUser(user), HttpStatus.CREATED);
         } catch (Exception e) {
-            return new ResponseEntity<UserDTO>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 

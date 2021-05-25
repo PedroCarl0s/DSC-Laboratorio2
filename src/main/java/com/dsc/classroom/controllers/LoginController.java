@@ -2,7 +2,6 @@ package com.dsc.classroom.controllers;
 
 import javax.validation.Valid;
 
-import com.dsc.classroom.dtos.UserDTO;
 import com.dsc.classroom.dtos.UserLoginDTO;
 import com.dsc.classroom.exceptions.InvalidLoginException;
 import com.dsc.classroom.services.JWTService;
@@ -33,7 +32,7 @@ public class LoginController {
         try {
             return new ResponseEntity<LoginResponse>(jwtService.authenticate(userLoginDTO), HttpStatus.OK);
         } catch (InvalidLoginException e) {
-            return new ResponseEntity<>(HttpStatus.FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
     }

@@ -4,7 +4,11 @@ import com.dsc.classroom.dtos.CommentDTO;
 import com.dsc.classroom.exceptions.DisciplineNotExistsException;
 import com.dsc.classroom.models.Comment;
 import com.dsc.classroom.models.Discipline;
+import com.dsc.classroom.models.DisciplineLike;
+import com.dsc.classroom.models.User;
+import com.dsc.classroom.repositories.DisciplineLikeRepository;
 import com.dsc.classroom.repositories.DisciplineRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +19,15 @@ import java.util.Optional;
 public class DisciplineService {
 
     private DisciplineRepository disciplineRepository;
+    private DisciplineLikeRepository likeRepository;
+    private UserService userService;
 
     @Autowired
-    public DisciplineService(DisciplineRepository disciplineRepository) {
+    public DisciplineService(DisciplineRepository disciplineRepository, 
+            UserService userService, DisciplineLikeRepository likeRepository) {
         this.disciplineRepository = disciplineRepository;
+        this.userService = userService;
+        this.likeRepository = likeRepository;
     }
 
     public Iterable<Discipline> addDisciplines(List<Discipline> disciplines) {
@@ -36,10 +45,19 @@ public class DisciplineService {
                 new DisciplineNotExistsException("The discipline with ID " + id + " not exists!"));
     }
 
-    public Discipline addLike(Long id) throws DisciplineNotExistsException {
-        Discipline discipline = getDiscipline(id);
-        discipline.setLikes(discipline.getLikes()+1);
-        return this.disciplineRepository.save(discipline);
+    public Discipline addLike(Long disciplineId, String userId) throws DisciplineNotExistsException {
+        Discipline discipline = getDiscipline(disciplineId);
+        Optional<User> user = this.userService.findByEmail(userId);
+
+        if (user.isPresent()) {
+            DisciplineLike like = new DisciplineLike();
+            like.setUser(user.get());
+            like.setDiscipline(discipline);
+
+            this.likeRepository.save(like);
+        }
+
+        return discipline;
     }
 
     public List<Discipline> getRankingByNotes() {
