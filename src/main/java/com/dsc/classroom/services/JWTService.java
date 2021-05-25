@@ -60,12 +60,16 @@ public class JWTService {
         return Optional.of(subject);
     }
 
-    public User getUserId(String authorization) {
+    public User getUserId(String authorization) throws Exception {
         String email = userIdRecovery(authorization)
                 .orElseThrow(() -> new SecurityException("The user was not found!"));
 
         Optional<User> user = userService.findByEmail(email);
 
-        return user.get();
+        if (user.isPresent()) {
+            return user.get();
+        }
+
+        throw new Exception("The user not exists!");
     }
 }
